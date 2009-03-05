@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Deal Data Engine
+Comment=Deal Data Engine
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-Library=plasma_engine_deal
+X-Plasma-EngineName=deal
+X-KDE-PluginInfo-Name=deal
