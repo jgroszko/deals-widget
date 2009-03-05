@@ -7,6 +7,7 @@
 #include <Plasma/Svg>
 #include <plasma/widgets/label.h>
 #include <plasma/widgets/iconwidget.h>
+#include <KComponentData>
 
 class QGraphicsImageWidget;
 
@@ -35,6 +36,6 @@ protected:
 
 };
 
-K_EXPORT_PLASMA_APPLET(deals, DealApplet)
+K_EXPORT_PLASMA_APPLET(deal, DealApplet)
 
 #endif

@@ -8,3 +8,5 @@ install(TARGETS plasma_applet_deal
 		DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES plasma-applet-deal.desktop
 	      DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES deal.notifyrc
+	      DESTINATION ${DATA_INSTALL_DIR}/deal)

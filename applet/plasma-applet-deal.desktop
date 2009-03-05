@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Deals
+Name=Deal
 Comment=Deals Widget
 Type=Service
  
@@ -7,7 +7,7 @@ X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_deal
 X-KDE-PluginInfo-Author=John Groszko
 X-KDE-PluginInfo-Email=grosjoh1@iit.edu
-X-KDE-PluginInfo-Name=deals
+X-KDE-PluginInfo-Name=deal
 X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-Website=http://www.wouba.com/
 X-KDE-PluginInfo-Category=Examples

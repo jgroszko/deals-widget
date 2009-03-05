@@ -1,0 +1,7 @@
+[Global]
+Name=Deals Widget
+Comment=Deals Widget
+Version=1
+
+[Event/newItem]
+Action=Popup
