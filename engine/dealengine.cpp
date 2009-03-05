@@ -60,52 +60,55 @@ QStringList DealEngine::sources() const
 
 bool DealEngine::sourceRequestEvent(const QString &source)
 {
+     kDebug() << source;
     return updateSourceEvent(source);
 }
 
 bool DealEngine::updateSourceEvent(const QString &source)
 {
-    QXmlQuery query;
+     kDebug() << source;
+     
+     QXmlQuery query;
     
-    QStringList results;
+     QStringList results;
 
-    query.setQuery(QString("doc('%1')//item[position()=1]/*/string()")
-	 .arg(m_sources[source]));
-    query.evaluateTo(&results);
+     query.setQuery(QString("doc('%1')//item[position()=1]/*/string()")
+		    .arg(m_sources[source]));
+     query.evaluateTo(&results);
 
-    if(results.count() < 13)
-	 return false;
+     if(results.count() < 13)
+	  return false;
 
-    Data data;
+     Data data;
 
-    data["name"] = results[0];
-    data["description"] = results[1];
-    data["link"] = results[2];
-    data["pubDate"] = results[3];
-    data["listDescription"] = results[4];
-    data["price"] = results[5];
-    data["priceCurrent"] = results[6];
-    data["priceRegular"] = results[7];
-    data["tinyImage"] = results[8];
-    data["image"] = results[9];
-    data["thumbnail"] = results[10];
-    data["detailImage"] = results[11];
-    data["availability"] = results[12];
+     data["name"] = results[0];
+     data["description"] = results[1];
+     data["link"] = results[2];
+     data["pubDate"] = results[3];
+     data["listDescription"] = results[4];
+     data["price"] = results[5];
+     data["priceCurrent"] = results[6];
+     data["priceRegular"] = results[7];
+     data["tinyImage"] = results[8];
+     data["image"] = results[9];
+     data["thumbnail"] = results[10];
+     data["detailImage"] = results[11];
+     data["availability"] = results[12];
 
-    if(m_cachedThumbnailURLs[source] != data["thumbnail"])
-    {
-	 /* Request new thumbnail */
-	 KIO::StoredTransferJob* job = (KIO::StoredTransferJob*)KIO::storedGet(data["thumbnail"].toString(), KIO::Reload, KIO::HideProgressInfo);
-	 job->exec();
+     if(m_cachedThumbnailURLs[source] != data["thumbnail"])
+     {
+	  /* Request new thumbnail */
+	  KIO::StoredTransferJob* job = (KIO::StoredTransferJob*)KIO::storedGet(data["thumbnail"].toString(), KIO::Reload, KIO::HideProgressInfo);
+	  job->exec();
 	 
-	 data["pixmap"] = job->data();
-    }
+	  data["pixmap"] = job->data();
+     }
 
-    setData(source, data);
+     setData(source, data);
 
-    m_cachedThumbnailURLs[source] = data["thumbnail"].toString();
+     m_cachedThumbnailURLs[source] = data["thumbnail"].toString();
 
-    return true;
+     return true;
 }
 
 K_EXPORT_PLASMA_DATAENGINE(deal, DealEngine)

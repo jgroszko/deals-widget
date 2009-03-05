@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QGraphicsLinearLayout>
+#include <KConfigDialog>
 #include <KNotification>
 
 DealApplet::DealApplet(QObject *parent, const QVariantList &args)
@@ -14,6 +15,8 @@ DealApplet::DealApplet(QObject *parent, const QVariantList &args)
     setBackgroundHints(DefaultBackground);
     setAspectRatioMode(Plasma::FixedSize);
     setMinimumSize(QSizeF(400, 200));
+
+    setHasConfigurationInterface(true);
 }
 
 DealApplet::~DealApplet()
@@ -24,19 +27,22 @@ DealApplet::~DealApplet()
 
 void DealApplet::init()
 {
-    Plasma::DataEngine* dealEngine = dataEngine("deal");
+     KConfigGroup cg = config();
+     m_site = cg.readEntry("site", "Brociety");
 
-    if(dealEngine->isValid())
-	 dealEngine->connectSource("Brociety", this, 600, Plasma::NoAlignment);
-    else
-	 setFailedToLaunch(true, "Deal engine was not valid.");
+     m_engine = dataEngine("deal");
 
-    QGraphicsLinearLayout* mainLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+     if(m_engine->isValid())
+	  m_engine->connectSource(m_site, this);
+     else
+	  setFailedToLaunch(true, "Deal engine was not valid.");
 
-    mainLayout->addItem(m_Icon);
-    mainLayout->addItem(m_Label);
+     QGraphicsLinearLayout* mainLayout = new QGraphicsLinearLayout(Qt::Horizontal);
 
-    setLayout(mainLayout);
+     mainLayout->addItem(m_Icon);
+     mainLayout->addItem(m_Label);
+
+     setLayout(mainLayout);
 }
 
 void DealApplet::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
@@ -76,6 +82,49 @@ void DealApplet::paintInterface(QPainter *p,
 {
     p->setRenderHint(QPainter::SmoothPixmapTransform);
     p->setRenderHint(QPainter::Antialiasing);
+}
+
+void DealApplet::createConfigurationInterface(KConfigDialog *parent)
+{
+     connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
+     connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
+
+     QWidget *configWidget = new QWidget();
+     configUi.setupUi(configWidget);
+
+     QString source;
+     int selectedIndex = 0;
+     foreach(source, m_engine->sources())
+     {
+	  if(source == m_site)
+	       selectedIndex = configUi.siteCombo->count();
+
+	  configUi.siteCombo->addItem(source);
+     }
+
+     configUi.siteCombo->setCurrentIndex(selectedIndex);
+
+     parent->addPage(configWidget, i18n("General"), icon());
+}
+
+void DealApplet::configAccepted()
+{
+     QString new_site = configUi.siteCombo->currentText();
+
+     KConfigGroup cg = config();
+
+     if(m_site != new_site)
+     {
+	  cg.writeEntry("site", new_site);
+
+	  m_engine->disconnectSource(m_site, this);
+
+	  m_engine->connectSource(new_site, this);
+
+	  m_site = new_site;
+
+	  emit configNeedsSaving();
+     }
 }
 
 #include "dealapplet.moc"

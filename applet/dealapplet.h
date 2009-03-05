@@ -9,6 +9,8 @@
 #include <plasma/widgets/iconwidget.h>
 #include <KComponentData>
 
+#include "ui_configuration.h"
+
 class QGraphicsImageWidget;
 
 class DealApplet : public Plasma::Applet
@@ -27,12 +29,21 @@ class DealApplet : public Plasma::Applet
 
 public slots:
     void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
+    void createConfigurationInterface(KConfigDialog *parent);
+
+protected slots:
+    void configAccepted();
 
 protected:
+    Plasma::DataEngine* m_engine;
+    QString m_site;
+
     QString m_oldPubDate;
 
     Plasma::IconWidget* m_Icon;
     Plasma::Label* m_Label;
+
+    Ui::DealConfig configUi;
 
 };
 
