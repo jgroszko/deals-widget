@@ -102,6 +102,8 @@ bool DealEngine::updateSourceEvent(const QString &source)
 	  job->exec();
 	 
 	  data["pixmap"] = job->data();
+
+	  job->deleteLater();
      }
 
      setData(source, data);
