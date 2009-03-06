@@ -6,6 +6,7 @@
 #include <KConfigDialog>
 #include <KNotification>
 #include <KNotifyConfigWidget>
+#include <KRun>
 
 DealApplet::DealApplet(QObject *parent, const QVariantList &args)
     : Plasma::Applet(parent, args)
@@ -34,7 +35,7 @@ void DealApplet::init()
      m_engine = dataEngine("deal");
 
      if(m_engine->isValid())
-	  m_engine->connectSource(m_site, this);
+	  m_engine->connectSource(m_site, this, 60000);
      else
 	  setFailedToLaunch(true, "Deal engine was not valid.");
 
@@ -42,6 +43,8 @@ void DealApplet::init()
 
      mainLayout->addItem(m_Icon);
      mainLayout->addItem(m_Label);
+
+     connect(m_Icon, SIGNAL(clicked()), this, SLOT(openLink()));
 
      setLayout(mainLayout);
 }
@@ -62,7 +65,10 @@ void DealApplet::dataUpdated(const QString &source, const Plasma::DataEngine::Da
 	  event->setComponentData(componentData);
 	  event->setText("$" + data["priceCurrent"].toString() + " - " + data["name"].toString());
 	  event->setPixmap(pixmap_small);
+	  event->setActions(QStringList() << "View");
      
+	  connect(event, SIGNAL(activated(unsigned int)), this, SLOT(openLink()));
+
 	  event->sendEvent();
      
 	  m_oldPubDate = data["pubDate"].toString();
@@ -72,10 +78,18 @@ void DealApplet::dataUpdated(const QString &source, const Plasma::DataEngine::Da
 		      "<h3>$" + data["priceCurrent"].toString() + "</h3>" +
 		      "<p>" + data["listDescription"].toString() + "</p>");
 
+     m_link = data["link"].toString();
+
      m_Icon->setIcon(pixmap);
      m_Icon->setMinimumSize(m_Icon->sizeFromIconSize(128));
 
      update();
+}
+
+void DealApplet::openLink()
+{
+     if(m_link != QString())
+	  KRun::runUrl(m_link, "text/html", 0L);
 }
 
 void DealApplet::paintInterface(QPainter *p,
@@ -125,7 +139,7 @@ void DealApplet::configAccepted()
 
 	  m_engine->disconnectSource(m_site, this);
 
-	  m_engine->connectSource(new_site, this);
+	  m_engine->connectSource(new_site, this, 60000);
 
 	  m_site = new_site;
 

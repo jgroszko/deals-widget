@@ -39,14 +39,12 @@
 DealEngine::DealEngine(QObject* parent, const QVariantList& args)
     : Plasma::DataEngine(parent, args)
 {
-    m_sources["TramDock"] = "http://feeds.feedburner.com/tramdock";
+    m_sources["TramDock"] = "http://feeds2.feedburner.com/tramdock";
     m_sources["WhiskeyMilitia"] = "http://feeds.feedburner.com/whiskeymilitia";
     m_sources["SteepAndCheap"] = "http://feeds.feedburner.com/steepandcheap";
     m_sources["ChainLove"] = "http://feeds.feedburner.com/chainlove";
     m_sources["BonkTown"] = "http://rss.bonktown.com/docs/bonktown/rss.xml";
     m_sources["Brociety"] = "http://rss.brociety.com/docs/brociety/rss.xml";
-
-    setMinimumPollingInterval(1000); // 1 second
 }
 
 DealEngine::~DealEngine()

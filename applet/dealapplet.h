@@ -31,6 +31,8 @@ public slots:
     void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
     void createConfigurationInterface(KConfigDialog *parent);
 
+    void openLink();
+
 protected slots:
     void configAccepted();
 
@@ -39,6 +41,7 @@ protected:
     QString m_site;
 
     QString m_oldPubDate;
+    QString m_link;
 
     Plasma::IconWidget* m_Icon;
     Plasma::Label* m_Label;
