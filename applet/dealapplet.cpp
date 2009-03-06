@@ -5,6 +5,7 @@
 #include <QGraphicsLinearLayout>
 #include <KConfigDialog>
 #include <KNotification>
+#include <KNotifyConfigWidget>
 
 DealApplet::DealApplet(QObject *parent, const QVariantList &args)
     : Plasma::Applet(parent, args)
@@ -105,6 +106,11 @@ void DealApplet::createConfigurationInterface(KConfigDialog *parent)
      configUi.siteCombo->setCurrentIndex(selectedIndex);
 
      parent->addPage(configWidget, i18n("General"), icon());
+
+     KNotifyConfigWidget* notifyWidget = new KNotifyConfigWidget(parent);
+     notifyWidget->setApplication("deal");
+     
+     parent->addPage(notifyWidget, i18n("Notifications"), "preferences-desktop-notification");
 }
 
 void DealApplet::configAccepted()

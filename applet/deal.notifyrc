@@ -4,4 +4,6 @@ Comment=Deals Widget
 Version=1
 
 [Event/newItem]
+Name=New Item
+Comment=A new item is available
 Action=Popup
